@@ -57,8 +57,8 @@ public class LogIndex {
 	private int writerIndex = -1;
 	private AtomicInteger size = new AtomicInteger();
 
-	public LogIndex(String path) throws IOException, FileFormatException {
-		File dbFile = new File(path);
+	public LogIndex(String file) throws IOException, FileFormatException {
+		File dbFile = new File(file);
 
 		// 文件不存在，创建文件
 		if (dbFile.exists() == false) {

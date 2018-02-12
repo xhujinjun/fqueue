@@ -33,6 +33,7 @@ import org.slf4j.LoggerFactory;
 import com.google.code.fqueue.exception.FileEOFException;
 import com.google.code.fqueue.exception.FileFormatException;
 /**
+ * 日志写服务
  *@author sunli
  *@date 2011-5-18
  *@version $Id$
@@ -116,7 +117,13 @@ public class LogEntity {
 
 	}
 
+	/**
+	 * 文件同步
+	 */
 	public class Sync implements Runnable {
+		/**
+		 * 每个10ms让os强制刷盘
+		 */
 		@Override
 		public void run() {
 			while (true) {

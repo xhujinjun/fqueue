@@ -38,11 +38,28 @@ import com.google.code.fqueue.log.LogIndex;
  */
 public class FSQueue {
 	private static final Log log = LogFactory.getLog(FSQueue.class);
+	/**
+	 * 文件前缀
+	 */
 	public static final String filePrefix = "fqueue";
+	/**
+	 * 文件大小
+	 */
 	private int fileLimitLength = 1024 * 1024 * 100;
+	private int maxFileLimitLength = 1024 * 1024 * 1024 * 2;
+	/**
+	 * 索引数据库
+	 */
 	private static final String dbName = "icqueue.db";
+	/**
+	 * 文件分隔符
+	 */
 	private static final String fileSeparator = System.getProperty("file.separator");
+	/**
+	 * 文件路径
+	 */
 	private String path = null;
+
 	private final ExecutorService executor = Executors.newSingleThreadExecutor();
 	
 	private FileRunner deleteFileRunner;
@@ -72,6 +89,9 @@ public class FSQueue {
 	 * @throws Exception
 	 */
 	public FSQueue(String dir, int fileLimitLength) throws Exception {
+		if (fileLimitLength > maxFileLimitLength) {
+			throw new Exception("the log file can not more than 2G");
+		}
 		this.fileLimitLength = fileLimitLength;
 		File fileDir = new File(dir);
 		if (fileDir.exists() == false && fileDir.isDirectory() == false) {
@@ -202,7 +222,11 @@ public class FSQueue {
 		executor.shutdown();
 	}
 
-	public int getQueuSize() {
+	/**
+	 * 获取队列的大小
+	 * @return
+	 */
+	public int getQueueSize() {
 		return db.getSize();
 	}
 }

@@ -37,16 +37,22 @@ import com.google.code.fqueue.exception.FileFormatException;
 public class FQueue extends AbstractQueue<byte[]> implements Queue<byte[]>,
 		java.io.Serializable {
 	private static final long serialVersionUID = -5960741434564940154L;
-	private FSQueue fsQueue = null;
+
 	final Logger log = LoggerFactory.getLogger(FQueue.class);
 	private Lock lock = new ReentrantReadWriteLock().writeLock();
 
+	private FSQueue fsQueue = null;
+	/**
+	 * 缺省日志文件大小
+	 */
+	private static final int DEFAULT_LOG_SIZE = 1024 * 1024 * 300;
+
 	public FQueue(String path) throws Exception {
-		fsQueue = new FSQueue(path, 1024 * 1024 * 300);
+		fsQueue = new FSQueue(path, DEFAULT_LOG_SIZE);
 	}
 
-	public FQueue(String path, int logsize) throws Exception {
-		fsQueue = new FSQueue(path, logsize);
+	public FQueue(String path, int logSize) throws Exception {
+		fsQueue = new FSQueue(path, logSize);
 	}
 
 	@Override
@@ -56,7 +62,7 @@ public class FQueue extends AbstractQueue<byte[]> implements Queue<byte[]>,
 
 	@Override
 	public int size() {
-		return fsQueue.getQueuSize();
+		return fsQueue.getQueueSize();
 	}
 
 	@Override

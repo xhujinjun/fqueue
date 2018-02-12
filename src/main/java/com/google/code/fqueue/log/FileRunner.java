@@ -30,18 +30,34 @@ import org.slf4j.LoggerFactory;
 import com.google.code.fqueue.util.MappedByteBufferUtil;
 
 /**
+ * 预删除文件和预创建文件的异步任务
+ *
  * @author sunli
  * @date 2011-5-18
  * @version $Id$
  */
 public class FileRunner implements Runnable {
     private final Logger log = LoggerFactory.getLogger(FileRunner.class);
-    // 删除队列
+    /**
+     * 待删除的文件队列
+     */
     private static final Queue<String> deleteQueue = new ConcurrentLinkedQueue<String>();
-    // 新创建队列
+    /**
+     * 待创建的文件队列
+     */
     private static final Queue<String> createQueue = new ConcurrentLinkedQueue<String>();
+    /**
+     * 待删除或待创建的文件所在目录
+     */
     private String baseDir = null;
+
+    /**
+     * 文件大小限制
+     */
     private int fileLimitLength = 0;
+    /**
+     * 是否执行
+     */
     private volatile boolean keepRunning = true;
 
     public static void addDeleteFile(String path) {
@@ -57,6 +73,9 @@ public class FileRunner implements Runnable {
         this.fileLimitLength = fileLimitLength;
     }
 
+    /**
+     *
+     */
     @Override
     public void run() {
         String filePath, fileNum;
@@ -71,11 +90,13 @@ public class FileRunner implements Runnable {
                 }
                 continue;
             }
+            //删除文件
             if (filePath != null) {
                 File delFile = new File(filePath);
                 delFile.delete();
             }
 
+            //预创建文件
             if (fileNum != null) {
                 filePath = baseDir + fileNum + ".idb";
                 try {
